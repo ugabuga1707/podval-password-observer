@@ -2,6 +2,7 @@ const { Telegraf } = require('telegraf');
 const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 const dotenv = require('dotenv');
+const fs = require('fs');
 dotenv.config();
 
 const TG_BOT_TOKEN = process.env.TG_BOT_TOKEN
@@ -38,12 +39,15 @@ bot.command('rotation', (ctx) => {
 
     monitoringTasks[chatId] = setInterval(async () => {
         try {
-            const res = await fetch('https://podval-arma.ru/profile', {
+            const res = await fetch('https://podval-arma.ru', {
                 headers: {
                     'Cookie': REMEMBER_WEB_COOKIE
                 }
             });
             const html = await res.text();
+
+            // Сохраняем HTML в файл
+            // fs.writeFileSync('page.html', html, 'utf8');
             const $ = cheerio.load(html);
 
             $('.ui-announces-item').each((_, el) => {
